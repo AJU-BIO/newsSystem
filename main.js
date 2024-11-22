@@ -78,13 +78,18 @@ async function fetchData(data) {
   const url =
     "https://script.google.com/macros/s/AKfycbxU1Ey7pvBThDREliKYqRdUp7Aeb9FQJsNMDmFzlh12WhmZUnEvHCgt0dFs-nilpfvY/exec";
 
+  const payload = {
+    type: "addUser",
+    data: data,
+  };
+
   try {
     const response = await fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
 
     if (!response.ok) {
@@ -97,4 +102,21 @@ async function fetchData(data) {
     console.error("Error:", error);
     throw error; // 에러를 호출한 곳으로 전달
   }
+}
+
+function getQueryParams() {
+  const query = window.location.search; // "?id=test"
+  const params = new URLSearchParams(query);
+  return {
+    id: params.get("id"), // "test"
+  };
+}
+
+// 처리
+const params = getQueryParams();
+if (params.id === "test") {
+  console.log("This is the test page");
+  // 특정 동작 수행
+} else {
+  console.log("Unknown ID:", params.id);
 }
