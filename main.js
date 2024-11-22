@@ -59,3 +59,5 @@ function OpenPopUp(title, content) {
 function closePopUp() {
   document.getElementById("popup").style.display = "none";
 }
+
+console.log(process.env.REACT_APP_POSTURL);
