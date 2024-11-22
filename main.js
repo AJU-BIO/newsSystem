@@ -55,7 +55,7 @@ async function handleRegister() {
     keywords: keywords,
   };
 
-  const res = await fetchData(data);
+  const res = await fetchData({ type: "addUser", data: data });
   console.log(res);
   OpenPopUp(
     "데이터전송",
@@ -79,19 +79,14 @@ async function fetchData(data) {
   const url =
     "https://script.google.com/macros/s/AKfycbxU1Ey7pvBThDREliKYqRdUp7Aeb9FQJsNMDmFzlh12WhmZUnEvHCgt0dFs-nilpfvY/exec";
 
-  const payload = {
-    type: "addUser",
-    data: data,
-  };
-
   try {
     const response = await fetch(url, {
       method: "POST",
-      mode: "no-cors",
+      // mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(data),
     });
 
     if (!response.ok) {
@@ -116,8 +111,8 @@ function getQueryParams() {
 
 // 처리
 const params = getQueryParams();
-if (params.id === "test") {
-  console.log("This is the test page");
+if (params.id) {
+  fetchData({ type: "checkID", data: params.id });
   // 특정 동작 수행
 } else {
   console.log("Unknown ID:", params.id);
