@@ -78,25 +78,18 @@ function fetchData(data) {
   const url =
     "https://script.google.com/macros/s/AKfycbxU1Ey7pvBThDREliKYqRdUp7Aeb9FQJsNMDmFzlh12WhmZUnEvHCgt0dFs-nilpfvY/exec";
 
-  // Fetch API를 사용하여 POST 요청 보내기
   fetch(url, {
-    method: "POST", // HTTP 메서드 설정
+    method: "POST",
+    mode: "no-cors", // CORS 차단을 우회
     headers: {
-      "Content-Type": "application/json", // 요청 본문의 형식 지정
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(data), // 데이터를 JSON 문자열로 변환하여 요청 본문에 추가
+    body: JSON.stringify(data),
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return "TEST 성공"; // 응답을 JSON으로 변환
-      // return response.json(); // 응답을 JSON으로 변환
-    })
-    .then((result) => {
-      console.log("Success:", result); // 요청 성공 시 결과 출력
+    .then(() => {
+      console.log("Request sent successfully (no response due to no-cors)");
     })
     .catch((error) => {
-      console.error("Error:", error); // 요청 실패 시 에러 출력
+      console.error("Error:", error);
     });
 }
