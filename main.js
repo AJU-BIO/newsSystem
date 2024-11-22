@@ -27,7 +27,7 @@ function removeChip(element, keyword) {
   keywords = keywords.filter((k) => k !== keyword);
 }
 
-function handleRegister() {
+async function handleRegister() {
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const ccEmail = document.getElementById("cc-email").value;
@@ -54,7 +54,7 @@ function handleRegister() {
     keywords: keywords,
   };
 
-  const res = fetchData(data);
+  const res = await fetchData(data);
   console.log(res);
   OpenPopUp(
     "데이터전송",
@@ -74,22 +74,27 @@ function closePopUp() {
   document.getElementById("popup").style.display = "none";
 }
 
-function fetchData(data) {
+async function fetchData(data) {
   const url =
     "https://script.google.com/macros/s/AKfycbxU1Ey7pvBThDREliKYqRdUp7Aeb9FQJsNMDmFzlh12WhmZUnEvHCgt0dFs-nilpfvY/exec";
 
-  fetch(url, {
-    method: "POST",
-    mode: "no-cors", // CORS 차단을 우회
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  })
-    .then(() => {
-      console.log("Request sent successfully (no response due to no-cors)");
-    })
-    .catch((error) => {
-      console.error("Error:", error);
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
     });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json(); // 응답 데이터를 JSON으로 변환
+    return "test"; // 변환된 데이터를 반환
+  } catch (error) {
+    console.error("Error:", error);
+    throw error; // 에러를 호출한 곳으로 전달
+  }
 }
