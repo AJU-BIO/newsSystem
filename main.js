@@ -15,6 +15,7 @@ function handleKeywordInput(event) {
 function addChip(keyword) {
   if (keyword.length < 2) {
     OpenPopUp("키워드 오류", "2글자 이상 입력하셔야합니다.");
+    return;
   }
   const chip = document.createElement("div");
   chip.className = "chip";
@@ -86,6 +87,7 @@ async function fetchData(data) {
   try {
     const response = await fetch(url, {
       method: "POST",
+      mode: "no-cors",
       headers: {
         "Content-Type": "application/json",
       },
