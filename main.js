@@ -387,6 +387,11 @@ function initializeSubscribeForm() {
       (chip) => chip.textContent.replace("×", "").trim()
     );
 
+    if (keywords.length === 0) {
+      showModal("키워드를 입력해주세요.");
+      return;
+    }
+
     // 폼 데이터 수집
     const formData = {
       type: "addMail",
