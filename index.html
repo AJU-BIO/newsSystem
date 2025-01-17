@@ -2,85 +2,160 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>AJUBIO News Mailing System</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400&family=Poppins:wght@500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500&family=Poppins:wght@500&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div id="popup" class="popup-background">
-      <div class="popup-container">
-        <button class="close-button" onclick="closePopUp()">&times;</button>
-        <h2 id="popup-title"></h2>
-        <p id="popup-content"></p>
-        <button class="confirm-button" onclick="closePopUp()">확인</button>
-      </div>
-    </div>
-
     <div class="navbar">
       <div>
         <img
-          src="https://sign.mail.worksmobile.com/signature/logo/kr1/RsK-KxumKAKmKAFjKAMZKxu-KoMm/SdbwKAgmKAudaAUrKqg9FxIjaxUwFoKdKxb9FxErFxu-"
+          src="https://sign.mail.worksmobile.com/signature/logo/kr1/RsK-KxumKAKmKAFjKAMZKxu-KoMm/d9KdFouZFouZKqUXKqEdaxu."
+          alt="아주바이오 로고"
         />
         <h1>News Mailing System</h1>
       </div>
     </div>
-    <div class="container">
-      <div class="greeting">
-        <p>안녕하세요, 아주바이오 입니다.</p>
-        <p>하기 내용을 등록해주시면</p>
-        <p>등록한 키워드로 기사가 검색될 경우 메일을 발송해드립니다.</p>
-        <div class="separator"></div>
-        <p>1. 키워드는 최대한 구체적으로 입력해주시면 좋습니다.</p>
-        <p class="note">
-          ex) 아주 를 입력할경우, 아주약품 뿐만 아니라 캘리포니아주 기사도
-          검색됩니다.
-        </p>
-        <p>2. 키워드에서 한칸 띄우고 입력하면 AND 조건으로 검색됩니다.</p>
-        <p class="note">
-          ex) 당뇨 연속혈당 을 입력하면, 당뇨와 연속혈당이 모두 포함된 기사만
-          검색
-        </p>
-        <p>3. 문의사항은 jeongjae.lee@ajubio.com 으로 부탁드립니다.</p>
-      </div>
-      <div class="input-group">
-        <label for="name">*이름</label>
-        <input type="text" id="name" placeholder="아주바이오" />
-      </div>
-      <div class="input-group">
-        <label for="email">*수신메일주소</label>
-        <input type="email" id="email" placeholder="jeongjae.lee@ajubio.com" />
-      </div>
-      <div class="input-group">
-        <label for="cc-email">참조메일(cc)</label>
-        <input type="email" id="cc-email" />
-      </div>
-      <div class="input-group">
-        <label for="cc-email">메일제목</label>
-        <input
-          type="text"
-          id="subject"
-          placeholder="아주바이오 주요키워드 기사"
-        />
-      </div>
-      <div class="input-group">
-        <label for="keywords">*키워드</label>
-        <input
-          type="text"
-          id="keywords"
-          placeholder="키워드 입력 후, 엔터키!"
-          onkeydown="handleKeywordInput(event)"
-        />
-      </div>
-      <div class="chips-container" id="chips-container"></div>
-      <button class="register-btn" onclick="handleRegister()">등록</button>
+
+    <div id="loading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>뉴스를 불러오는 중입니다...</p>
     </div>
+
+    <main>
+      <section class="container" id="headline">
+        <h1>주요 신문사 헤드라인</h1>
+        <div class="headline-slider">
+          <div class="headline-cards">
+            <!-- JS로 동적 생성될 카드들 -->
+          </div>
+          <button class="slide-button prev">&lt;</button>
+          <button class="slide-button next">&gt;</button>
+        </div>
+      </section>
+      <div class="content-wrapper">
+        <section class="container search-section">
+          <div class="search-container">
+            <div class="search-header">
+              <h1>기사 검색</h1>
+              <button id="subscribeBtn" class="subscribe-button">
+                메일구독
+              </button>
+            </div>
+            <div class="search-input-wrapper">
+              <input
+                type="text"
+                id="searchInput"
+                placeholder="검색어를 입력하세요 (2글자 이상)"
+                minlength="2"
+              />
+            </div>
+          </div>
+          <div id="searchResults" class="search-results">
+            <table id="resultsTable" style="display: none">
+              <thead>
+                <tr>
+                  <th class="td_press">언론사</th>
+                  <th class="td_date">날짜</th>
+                  <th class="td_title">기사 제목</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="container subscribe-section" style="display: none">
+          <div class="section-header">
+            <h1>구독 서비스 신청</h1>
+            <button type="button" class="close-button" aria-label="닫기">
+              ×
+            </button>
+          </div>
+          <form id="subscribeForm">
+            <div class="form-group">
+              <label for="name">이름</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="subject">메일 제목</label>
+              <input
+                type="text"
+                id="subject"
+                name="subject"
+                required
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="mailto">받는 사람 이메일</label>
+              <p class="desc">
+                여러명 입력할 경우, 세미콜론(;)으로 구분해주세요.
+              </p>
+              <p class="desc">ex) first@ajubio.com;second@ajubio.com</p>
+              <input
+                type="email"
+                id="mailto"
+                name="mailto"
+                required
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="mailcc">참조 이메일</label>
+              <input
+                type="email"
+                id="mailcc"
+                name="mailcc"
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="chipInput">키워드</label>
+              <p class="desc">키워드를 입력하고 Enter를 눌러주세요.</p>
+              <input
+                type="text"
+                id="chipInput"
+                class="chip-input"
+                placeholder="키워드 입력 후 Enter"
+              />
+              <div class="chip-container" id="chipContainer"></div>
+            </div>
+            <button type="submit" class="submit-button">저장</button>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <!-- 모달 컴포넌트 추가 -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div
+            id="modal-spinner"
+            class="loading-spinner"
+            style="display: none"
+          ></div>
+          <p id="modal-message"></p>
+        </div>
+        <div class="modal-footer">
+          <button id="modal-confirm-btn" class="modal-button">확인</button>
+        </div>
+      </div>
+    </div>
+
     <script src="main.js"></script>
   </body>
 </html>
