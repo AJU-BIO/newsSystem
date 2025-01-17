@@ -180,7 +180,7 @@ function initializeSlider() {
   });
 }
 
-const jsURL = typeof GOOGLEURL !== "undefined" ? GOOGLEURL : "";
+const jsURL = import.meta.env.VITE_GOOGLEURL;
 console.log(jsURL);
 if (!jsURL) {
   console.error("GOOGLEURL 환경변수가 설정되지 않았습니다.");
