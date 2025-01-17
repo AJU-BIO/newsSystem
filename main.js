@@ -180,16 +180,8 @@ function initializeSlider() {
   });
 }
 
-const googleUrl = document
-  .querySelector('meta[name="google-url"]')
-  .getAttribute("content");
-console.log("Google URL:", googleUrl);
-
-const jsURL = import.meta.env.VITE_GOOGLEURL;
-console.log(jsURL);
-if (!jsURL) {
-  console.error("GOOGLEURL 환경변수가 설정되지 않았습니다.");
-}
+const jsURL =
+  "https://script.google.com/macros/s/AKfycbxU1Ey7pvBThDREliKYqRdUp7Aeb9FQJsNMDmFzlh12WhmZUnEvHCgt0dFs-nilpfvY/exec";
 
 let headlineNews = []; // 현재 헤드라인 뉴스 저장
 let totalNews = []; // 전체 뉴스 데이터 저장
