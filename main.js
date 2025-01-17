@@ -180,8 +180,11 @@ function initializeSlider() {
   });
 }
 
-const jsURL =
-  "https://script.google.com/macros/s/AKfycbxU1Ey7pvBThDREliKYqRdUp7Aeb9FQJsNMDmFzlh12WhmZUnEvHCgt0dFs-nilpfvY/exec";
+const jsURL = typeof GOOGLEURL !== "undefined" ? GOOGLEURL : "";
+console.log(jsURL);
+if (!jsURL) {
+  console.error("GOOGLEURL 환경변수가 설정되지 않았습니다.");
+}
 
 let headlineNews = []; // 현재 헤드라인 뉴스 저장
 let totalNews = []; // 전체 뉴스 데이터 저장
