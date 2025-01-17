@@ -180,6 +180,11 @@ function initializeSlider() {
   });
 }
 
+const googleUrl = document
+  .querySelector('meta[name="google-url"]')
+  .getAttribute("content");
+console.log("Google URL:", googleUrl);
+
 const jsURL = import.meta.env.VITE_GOOGLEURL;
 console.log(jsURL);
 if (!jsURL) {
