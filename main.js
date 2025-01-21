@@ -186,20 +186,49 @@ const jsURL =
 let headlineNews = []; // 현재 헤드라인 뉴스 저장
 let totalNews = []; // 전체 뉴스 데이터 저장
 
+async function fetchWithRetry(url, maxAttempts = 3, delayMs = 1000) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) {
+        return response;
+      }
+      console.log(`시도 ${attempt}/${maxAttempts} 실패. 재시도 중...`);
+    } catch (error) {
+      console.error(`시도 ${attempt}/${maxAttempts} 중 오류 발생:`, error);
+    }
+
+    if (attempt < maxAttempts) {
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+  throw new Error(
+    `${maxAttempts}번의 시도 후에도 데이터를 가져오는데 실패했습니다.`
+  );
+}
+
 async function fetchNewsData() {
-  const loadingElement = document.getElementById("loading");
+  const headlineLoadingElement = document.getElementById("loading");
+  const searchLoadingElement = document.getElementById("searchLoading");
   const mainElement = document.querySelector("main");
   const searchSection = document.querySelector(".search-section");
 
   try {
-    // 초기 로딩 표시
-    loadingElement.style.display = "flex";
+    // 초기 상태 설정
+    headlineLoadingElement.style.display = "flex";
+    searchLoadingElement.style.display = "flex";
     mainElement.style.display = "none";
-    searchSection.style.display = "none";
+
+    // 검색 섹션은 보이되, 내부 콘텐츠는 숨김
+    searchSection.style.display = "block";
+    const searchContent = searchSection.querySelector(".search-content");
+    if (searchContent) {
+      searchContent.style.display = "none";
+    }
 
     // 1단계: 헤드라인 데이터 로딩
     console.log("헤드라인 데이터 요청 시작");
-    const response = await fetch(jsURL + "?id=newsMainPage");
+    const response = await fetchWithRetry(jsURL + "?id=newsMainPage");
     const data = await response.json();
 
     if (!data.nowHeadline) {
@@ -214,8 +243,8 @@ async function fetchNewsData() {
     await createHeadlineCards(headlineNews);
     initializeSubscribeForm();
 
-    // 헤드라인 섹션 표시
-    loadingElement.style.display = "none";
+    // 헤드라인 섹션만 표시
+    headlineLoadingElement.style.display = "none";
     mainElement.style.display = "flex";
     setTimeout(() => {
       mainElement.classList.add("loaded");
@@ -235,15 +264,20 @@ async function fetchNewsData() {
 
     // 검색 섹션 초기화 및 표시
     initializeSearch();
-    searchSection.style.display = "block";
+    searchLoadingElement.style.display = "none";
+    if (searchContent) {
+      searchContent.style.display = "block";
+    }
   } catch (error) {
     console.error("뉴스 데이터를 가져오는데 실패했습니다:", error);
-    loadingElement.innerHTML = `
+    const errorMessage = `
       <div style="text-align: center; color: #ff0000;">
         <p>데이터를 불러오는데 실패했습니다.</p>
         <p>잠시 후 다시 시도해주세요.</p>
       </div>
     `;
+    headlineLoadingElement.innerHTML = errorMessage;
+    searchLoadingElement.innerHTML = errorMessage;
   }
 }
 

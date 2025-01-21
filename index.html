@@ -44,7 +44,7 @@
 
     <div id="loading" class="loading-container">
       <div class="loading-spinner"></div>
-      <p>뉴스를 불러오는 중입니다...</p>
+      <p>헤드라인 뉴스를 불러오는 중입니다...</p>
     </div>
 
     <main>
@@ -60,33 +60,39 @@
       </section>
       <div class="content-wrapper">
         <section class="container search-section">
-          <div class="search-container">
-            <div class="search-header">
-              <h1>기사 검색</h1>
-              <button id="subscribeBtn" class="subscribe-button">
-                메일구독
-              </button>
-            </div>
-            <div class="search-input-wrapper">
-              <input
-                type="text"
-                id="searchInput"
-                placeholder="검색어를 입력하세요 (2글자 이상)"
-                minlength="2"
-              />
-            </div>
+          <div id="searchLoading" class="loading-container">
+            <div class="loading-spinner"></div>
+            <p>검색 데이터를 불러오는 중입니다...</p>
           </div>
-          <div id="searchResults" class="search-results">
-            <table id="resultsTable" style="display: none">
-              <thead>
-                <tr>
-                  <th class="td_press">언론사</th>
-                  <th class="td_date">날짜</th>
-                  <th class="td_title">기사 제목</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
+          <div class="search-content">
+            <div class="search-container">
+              <div class="search-header">
+                <h1>기사 검색</h1>
+                <button id="subscribeBtn" class="subscribe-button">
+                  메일구독
+                </button>
+              </div>
+              <div class="search-input-wrapper">
+                <input
+                  type="text"
+                  id="searchInput"
+                  placeholder="검색어를 입력하세요 (2글자 이상)"
+                  minlength="2"
+                />
+              </div>
+            </div>
+            <div id="searchResults" class="search-results">
+              <table id="resultsTable" style="display: none">
+                <thead>
+                  <tr>
+                    <th class="td_press">언론사</th>
+                    <th class="td_date">날짜</th>
+                    <th class="td_title">기사 제목</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
           </div>
         </section>
         <section class="container subscribe-section" style="display: none">
