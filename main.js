@@ -396,6 +396,34 @@ function initializeSubscribeForm() {
   const chipContainer = document.getElementById("chipContainer");
   const subscribeForm = document.getElementById("subscribeForm");
 
+  const mailccInput = document.getElementById("mailcc");
+  const mailccError = document.getElementById("mailcc-error");
+
+  function validateEmails(emails) {
+    if (!emails) return true; // 참조 이메일은 선택사항이므로 비어있어도 됨
+
+    const emailList = emails.split(";");
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    for (const email of emailList) {
+      const trimmedEmail = email.trim();
+      if (trimmedEmail && !emailRegex.test(trimmedEmail)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  mailccInput.addEventListener("input", function () {
+    const isValid = validateEmails(this.value);
+    if (!isValid) {
+      mailccError.textContent = "올바른 이메일 형식이 아닙니다.";
+      mailccError.style.display = "block";
+    } else {
+      mailccError.style.display = "none";
+    }
+  });
+
   // 키워드 칩 추가 이벤트
   chipInput.addEventListener("keypress", function (e) {
     if (e.key === "Enter") {
@@ -415,6 +443,12 @@ function initializeSubscribeForm() {
   // 폼 제출 이벤트
   subscribeForm.addEventListener("submit", async function (e) {
     e.preventDefault();
+
+    const mailccValue = document.getElementById("mailcc").value;
+    if (!validateEmails(mailccValue)) {
+      showModal("올바른 이메일 형식이 아닙니다.");
+      return;
+    }
 
     // 키워드 수집
     const keywords = Array.from(chipContainer.querySelectorAll(".chip")).map(
@@ -438,7 +472,6 @@ function initializeSubscribeForm() {
 
     try {
       showModal("등록 중입니다...", true);
-
       const response = await fetch(jsURL, {
         method: "POST",
         headers: {
@@ -451,13 +484,17 @@ function initializeSubscribeForm() {
 
       if (result.success) {
         showModal(result.message || "구독 신청이 완료되었습니다.");
-        subscribeForm.reset();
-        chipContainer.innerHTML = "";
-        document.querySelector(".subscribe-section").style.display = "none";
-        document
-          .querySelector(".content-wrapper")
-          .classList.remove("split-view");
-        document.querySelector(".search-section").style.display = "block";
+
+        // 폼 초기화 부분 수정
+        subscribeForm.reset(); // 폼 필드 초기화
+        chipContainer.innerHTML = ""; // 키워드 칩 초기화
+        mailccError.style.display = "none"; // 에러 메시지 숨기기
+
+        // 구독 섹션 닫기
+        const subscribeSection = document.querySelector(".subscribe-section");
+        const contentWrapper = document.querySelector(".content-wrapper");
+        subscribeSection.style.display = "none";
+        contentWrapper.classList.remove("split-view");
       } else {
         showModal(result.message || "구독 신청 중 오류가 발생했습니다.");
       }

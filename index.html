@@ -125,10 +125,8 @@
             </div>
             <div class="form-group">
               <label for="mailto">받는 사람 이메일</label>
-              <p class="desc">
-                여러명 입력할 경우, 세미콜론(;)으로 구분해주세요.
-              </p>
-              <p class="desc">ex) first@ajubio.com;second@ajubio.com</p>
+              <p class="desc">여러명 입력할 경우, 참조메일로 추가해주세요.</p>
+
               <input
                 type="email"
                 id="mailto"
@@ -139,16 +137,36 @@
             </div>
             <div class="form-group">
               <label for="mailcc">참조 이메일</label>
+              <p class="desc">
+                여러명 입력할 경우, 세미콜론(;)으로 구분해주세요.
+              </p>
+              <p class="desc">ex) first@ajubio.com;second@ajubio.com</p>
               <input
-                type="email"
+                type="text"
                 id="mailcc"
                 name="mailcc"
                 autocomplete="off"
+                pattern="^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(;[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})*$"
               />
+              <p
+                class="error-message"
+                id="mailcc-error"
+                style="display: none; color: red; font-size: 0.9em"
+              ></p>
             </div>
             <div class="form-group">
               <label for="chipInput">키워드</label>
               <p class="desc">키워드를 입력하고 Enter를 눌러주세요.</p>
+              <p class="desc">
+                '아주' 라는 키워드를 등록하면, 캘리포니'아주' 기사도 검색됩니다.
+              </p>
+              <p class="desc">
+                이런 경우, 공백을 이용해서 AND 조건으로 검색 가능합니다.
+              </p>
+              <p class="desc">
+                ex) '아주 비뇨' 키워드 등록 시, '아주' 와 '비뇨' 모두 포함된
+                기사만 검색됩니다.
+              </p>
               <input
                 type="text"
                 id="chipInput"
